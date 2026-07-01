@@ -28,7 +28,7 @@ public:
         if (root_p == root_q) {
             return;
         }
-
+        // weighted union
         if (size[root_p] < size[root_q]) {
             id[root_p] = root_q;
             size[root_q] += size[root_p];

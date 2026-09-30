@@ -28,3 +28,17 @@ add_executable(sort_test tests/sort_test.cpp)
 target_link_libraries(sort_test PRIVATE algorithms4th)
 
 add_test(NAME sort_test COMMAND sort_test)
+
+add_executable(hash_map_test tests/hash_map_test.cpp)
+target_link_libraries(hash_map_test PRIVATE algorithms4th)
+foreach(implementation chaining open_addressing)
+    foreach(stage empty basic collisions growth churn random generic rehash scaling)
+        add_test(NAME hash_map_${implementation}_${stage}
+                 COMMAND hash_map_test ${implementation} ${stage})
+        set_tests_properties(hash_map_${implementation}_${stage}
+                             PROPERTIES TIMEOUT 10)
+    endforeach()
+endforeach()
+add_test(NAME hash_map_open_addressing_tombstones
+         COMMAND hash_map_test open_addressing tombstones)
+set_tests_properties(hash_map_open_addressing_tombstones PROPERTIES TIMEOUT 10)

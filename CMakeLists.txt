@@ -19,10 +19,10 @@ target_link_libraries(union_find_test PRIVATE algorithms4th)
 
 add_test(NAME union_find_test COMMAND union_find_test)
 
-add_executable(conv1d_stream_test tests/conv1d_stream_test.cpp)
-target_link_libraries(conv1d_stream_test PRIVATE algorithms4th Threads::Threads)
+add_executable(conv1d_test tests/conv1d_test.cpp)
+target_link_libraries(conv1d_test PRIVATE algorithms4th Threads::Threads)
 
-add_test(NAME conv1d_stream_test COMMAND conv1d_stream_test)
+add_test(NAME conv1d_test COMMAND conv1d_test)
 
 add_executable(fft_test tests/fft_test.cpp)
 target_link_libraries(fft_test PRIVATE algorithms4th)

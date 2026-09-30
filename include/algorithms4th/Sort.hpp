@@ -7,7 +7,7 @@
 template <typename T>
 class Sort {
 public:
-    explicit Sort(std::vector<T> data): data_(std::move(data)) {}
+    explicit Sort(std::vector<T> data) : data_(std::move(data)) {}
 
     void selection_sort()
     {
@@ -17,6 +17,16 @@ public:
     void insertion_sort()
     {
         insertion_sort(data_);
+    }
+
+    void merge_sort()
+    {
+        merge_sort(data_);
+    }
+
+    void quick_sort()
+    {
+        quick_sort(data_);
     }
 
     bool is_sorted() const
@@ -51,6 +61,85 @@ public:
                 swap(values[j], values[j - 1]);
             }
         }
+    }
+
+    static void merge_sort(std::vector<T>& values)
+    {
+        const std::size_t n = values.size();
+        std::vector<T> aux(n);
+        merge_sort(values, aux, 0, n);
+    }
+
+    static void merge_sort(std::vector<T>& values, std::vector<T>& aux, std::size_t left, std::size_t right)
+    {
+        if (right - left <= 1) {
+            return;
+        }
+        std::size_t mid = left + (right - left) / 2;
+        merge_sort(values, aux, left, mid);
+        merge_sort(values, aux, mid, right);
+        merge(values, aux, left, mid, right);
+    }
+
+    static void merge(std::vector<T>& values, std::vector<T>& aux, std::size_t left, std::size_t mid, std::size_t right)
+    {
+        std::size_t i = left;
+        std::size_t j = mid;
+        std::size_t k = left;
+
+        while (i < mid && j < right) {
+            if (values[j] < values[i]) {
+                aux[k++] = values[j++];
+            } else {
+                aux[k++] = values[i++];
+            }
+        }
+
+        while (i < mid) {
+            aux[k++] = values[i++];
+        }
+
+        while (j < right) {
+            aux[k++] = values[j++];
+        }
+
+        for (std::size_t p = left; p < right; ++p) {
+            values[p] = aux[p];
+        }
+    }
+
+    // ponytail: first-element pivot can take O(n^2) time and O(n) stack;
+    // use three-way partitioning and recurse on the smaller side if needed.
+    static void quick_sort(std::vector<T>& values)
+    {
+        quick_sort(values, 0, values.size());
+    }
+
+    static void quick_sort(std::vector<T>& values, std::size_t left, std::size_t right)
+    {
+        if (right - left <= 1) {
+            return;
+        }
+        std::size_t pivot = partition(values, left, right);
+        quick_sort(values, left, pivot);
+        quick_sort(values, pivot + 1, right);
+    }
+
+    static std::size_t partition(std::vector<T>& values, std::size_t left, std::size_t right)
+    {
+        T v = values[left];
+        std::size_t store = left + 1;
+
+        for (auto i = left + 1; i < right; ++i) {
+            if (values[i] < v) {
+                swap(values[i], values[store]);
+                ++store;
+            }
+        }
+
+        std::size_t pivot_index = store - 1;
+        swap(values[left], values[pivot_index]);
+        return pivot_index;
     }
 
     static bool is_sorted(const std::vector<T>& values)
